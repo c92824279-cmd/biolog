@@ -115,24 +115,6 @@
             font-family: inherit;
         }
 
-        .suggestions-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 15px;
-        }
-
-        .suggestion-chip {
-            background: #eef5ff;
-            color: var(--primary);
-            border: 1px solid #d0e3ff;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
         .symptoms-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -170,7 +152,6 @@
         }
 
         .btn-primary { background: var(--primary); color: white; }
-        .btn-accent { background: var(--accent); color: white; }
         .btn-ai { background: linear-gradient(135deg, #6e8efb, #a777e3); color: white; }
         .btn-danger { background: #fff1f2; color: var(--danger); }
         .btn-outline { background: transparent; border: 1px solid #e0e0e0; color: var(--text-light); }
@@ -207,16 +188,6 @@
             margin-top: 5px;
         }
 
-        .log-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            border-top: 1px solid #f0f0f0;
-            padding-top: 10px;
-        }
-
-        .btn-sm { padding: 8px 12px; font-size: 0.8rem; border-radius: 8px; flex: 1; margin: 0; }
-
         #message-box {
             position: fixed;
             top: 10px;
@@ -231,7 +202,6 @@
             z-index: 2000;
         }
 
-        /* AI Analysis Modal */
         #ai-modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -239,7 +209,6 @@
             z-index: 3000;
             display: none;
             padding: 20px;
-            overflow-y: auto;
         }
 
         .ai-card {
@@ -248,6 +217,8 @@
             padding: 25px;
             max-width: 500px;
             margin: 40px auto;
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
         .ai-result {
@@ -261,53 +232,17 @@
             animation: dots 1.5s steps(5, end) infinite;
         }
         @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } }
-
-        /* Confirm Modal personnalisé */
-        #confirm-modal {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 4000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-        .confirm-card {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-        .confirm-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
     </style>
 </head>
 <body>
 
 <div id="message-box"></div>
 
-<!-- Modal de Confirmation Personnalisé -->
-<div id="confirm-modal">
-    <div class="confirm-card">
-        <h3 id="confirm-msg" style="margin-top:0;">Êtes-vous sûr ?</h3>
-        <div class="confirm-actions">
-            <button class="btn btn-outline" onclick="closeConfirm()" style="margin:0;">Annuler</button>
-            <button class="btn btn-danger" onclick="executeConfirm()" style="margin:0;">Confirmer</button>
-        </div>
-    </div>
-</div>
-
 <!-- Modal IA -->
 <div id="ai-modal" onclick="this.style.display='none'">
     <div class="ai-card" onclick="event.stopPropagation()">
-        <h2 style="margin-top:0; color:var(--symptom)">Analyse IA de Santé</h2>
-        <div id="ai-content" class="ai-result">Chargement de l'analyse...</div>
+        <h2 style="margin-top:0; color:var(--symptom)">Analyse IA Intelligence</h2>
+        <div id="ai-content" class="ai-result">Recherche de corrélations...</div>
         <button class="btn btn-outline" style="margin-top:20px" onclick="document.getElementById('ai-modal').style.display='none'">Fermer</button>
     </div>
 </div>
@@ -320,83 +255,74 @@
     <!-- ONGLET SAISIE -->
     <div id="tab-add" class="tab-content active">
         <form id="logForm">
-            <input type="hidden" id="editId" value="">
             <div class="card">
                 <div style="display: flex; gap: 10px;">
                     <div style="flex: 1;">
-                        <label for="date">Date</label>
+                        <label>Date</label>
                         <input type="date" id="date" required>
                     </div>
                     <div style="flex: 1;">
-                        <label for="time">Heure</label>
+                        <label>Heure</label>
                         <input type="time" id="time" required>
                     </div>
                 </div>
                 
-                <label for="type">Type d'entrée</label>
+                <label>Moment du repas</label>
                 <select id="type">
                     <option value="Petit-déjeuner">Petit-déjeuner</option>
                     <option value="Déjeuner">Déjeuner</option>
                     <option value="Dîner">Dîner</option>
                     <option value="Collation">Collation</option>
-                    <option value="Hors Repas">Hors Repas (Symptômes seuls)</option>
+                    <option value="Symptôme seul">Symptôme seul (hors repas)</option>
                 </select>
 
-                <label for="foods">Aliments consommés</label>
-                <textarea id="foods" placeholder="Ex: Pâtes carbonara, salade..." rows="3"></textarea>
-                <div id="food-suggestions" class="suggestions-container"></div>
-
-                <label for="drinks">Boissons</label>
-                <textarea id="drinks" placeholder="Ex: Eau gazeuse, café..." rows="2"></textarea>
+                <label>Contenu du repas</label>
+                <textarea id="foods" placeholder="Ex: Pâtes au fromage, tomate..." rows="3"></textarea>
+                
+                <label>Boisson</label>
+                <input type="text" id="drinks" placeholder="Ex: Eau gazeuse, jus d'orange...">
             </div>
 
             <div class="card">
-                <label>Symptômes</label>
+                <label>Symptômes ressentis</label>
                 <div class="symptoms-grid">
                     <div>
-                        <input type="checkbox" id="s_ventre" class="symptom-checkbox" value="Mal de ventre">
-                        <label for="s_ventre" class="symptom-label">Mal de ventre</label>
+                        <input type="checkbox" id="s1" class="symptom-checkbox" value="Mal de ventre">
+                        <label for="s1" class="symptom-label">Mal de ventre</label>
                     </div>
                     <div>
-                        <input type="checkbox" id="s_ballon" class="symptom-checkbox" value="Ballonnement">
-                        <label for="s_ballon" class="symptom-label">Ballonnement</label>
+                        <input type="checkbox" id="s2" class="symptom-checkbox" value="Ballonnement">
+                        <label for="s2" class="symptom-label">Ballonnement</label>
                     </div>
                     <div>
-                        <input type="checkbox" id="s_diarr" class="symptom-checkbox" value="Diarrhée">
-                        <label for="s_diarr" class="symptom-label">Diarrhée</label>
+                        <input type="checkbox" id="s3" class="symptom-checkbox" value="Diarrhée">
+                        <label for="s3" class="symptom-label">Diarrhée</label>
                     </div>
                     <div>
-                        <input type="checkbox" id="s_const" class="symptom-checkbox" value="Constipation">
-                        <label for="s_const" class="symptom-label">Constipation</label>
+                        <input type="checkbox" id="s4" class="symptom-checkbox" value="Constipation">
+                        <label for="s4" class="symptom-label">Constipation</label>
                     </div>
                     <div>
-                        <input type="checkbox" id="s_nausee" class="symptom-checkbox" value="Nausées">
-                        <label for="s_nausee" class="symptom-label">Nausées</label>
+                        <input type="checkbox" id="s5" class="symptom-checkbox" value="Nausées">
+                        <label for="s5" class="symptom-label">Nausées</label>
                     </div>
                     <div>
-                        <input type="checkbox" id="s_fatigue" class="symptom-checkbox" value="Fatigue">
-                        <label for="s_fatigue" class="symptom-label">Fatigue</label>
+                        <input type="checkbox" id="s6" class="symptom-checkbox" value="Fatigue">
+                        <label for="s6" class="symptom-label">Fatigue</label>
                     </div>
                 </div>
-                <input type="text" id="other_symptoms" placeholder="Autre symptôme ou note...">
+                <input type="text" id="other_s" placeholder="Note ou autre symptôme...">
             </div>
 
-            <button type="submit" id="submitBtn" class="btn btn-primary">Enregistrer l'entrée</button>
-            <div id="editButtons" style="display:none;">
-                <button type="button" id="updateBtn" class="btn btn-accent" onclick="saveLog()">Mettre à jour</button>
-                <button type="button" id="cancelBtn" class="btn btn-outline" onclick="resetForm()">Annuler</button>
-            </div>
+            <button type="submit" class="btn btn-primary">Enregistrer l'entrée</button>
         </form>
     </div>
 
     <!-- ONGLET JOURNAL -->
     <div id="tab-list" class="tab-content">
-        <button onclick="analyzeWithAI()" class="btn btn-ai">✨ Analyser mes coupables (IA)</button>
-        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-            <button onclick="exportCSV()" class="btn btn-outline btn-sm">Export CSV</button>
-            <button onclick="clearAll()" class="btn btn-danger btn-sm">Vider le journal</button>
-        </div>
+        <button onclick="analyzeTendencies()" class="btn btn-ai">✨ Analyser mes tendances (IA)</button>
         <div id="logsContainer"></div>
+        <button onclick="clearHistory()" class="btn btn-danger" style="margin-top: 20px; font-size: 0.8rem; padding: 10px;">Vider tout l'historique</button>
     </div>
 </div>
 
@@ -413,16 +339,14 @@
 
 <script>
     const apiKey = ""; // Géré par l'environnement
-    let logs = JSON.parse(localStorage.getItem('healthLogs')) || [];
+    let logs = JSON.parse(localStorage.getItem('biolog_logs')) || [];
 
-    // --- INITIALISATION ---
     window.onload = () => {
-        setDefaultDate();
+        resetDateTime();
         renderLogs();
-        updateSuggestions();
     };
 
-    function setDefaultDate() {
+    function resetDateTime() {
         const now = new Date();
         document.getElementById('date').value = now.toISOString().split('T')[0];
         document.getElementById('time').value = now.toTimeString().slice(0,5);
@@ -437,17 +361,10 @@
         if(tab === 'list') renderLogs();
     }
 
-    // --- GESTION DES DONNÉES ---
-    const logForm = document.getElementById('logForm');
-    logForm.onsubmit = (e) => {
+    document.getElementById('logForm').onsubmit = (e) => {
         e.preventDefault();
-        saveLog();
-    };
-
-    function saveLog() {
-        const id = document.getElementById('editId').value || Date.now().toString();
         const entry = {
-            id: id,
+            id: Date.now(),
             date: document.getElementById('date').value,
             time: document.getElementById('time').value,
             type: document.getElementById('type').value,
@@ -457,189 +374,116 @@
         };
 
         document.querySelectorAll('.symptom-checkbox:checked').forEach(cb => entry.symptoms.push(cb.value));
-        const other = document.getElementById('other_symptoms').value.trim();
+        const other = document.getElementById('other_s').value.trim();
         if(other) entry.symptoms.push(other);
 
-        if(!entry.foods && entry.symptoms.length === 0) {
-            showMessage("Veuillez remplir au moins un aliment ou un symptôme", "error");
-            return;
-        }
-
-        const existingIdx = logs.findIndex(l => l.id === id);
-        if(existingIdx > -1) logs[existingIdx] = entry;
-        else logs.push(entry);
-
-        logs.sort((a,b) => new Date(b.date + 'T' + b.time) - new Date(a.date + 'T' + a.time));
-        localStorage.setItem('healthLogs', JSON.stringify(logs));
+        logs.unshift(entry);
+        localStorage.setItem('biolog_logs', JSON.stringify(logs));
         
         showMessage("Entrée enregistrée !");
-        resetForm();
-        switchTab('list');
-    }
-
-    function resetForm() {
-        logForm.reset();
-        document.getElementById('editId').value = "";
+        document.getElementById('logForm').reset();
+        resetDateTime();
         document.querySelectorAll('.symptom-checkbox').forEach(cb => cb.checked = false);
-        document.getElementById('submitBtn').style.display = 'block';
-        document.getElementById('editButtons').style.display = 'none';
-        setDefaultDate();
-        updateSuggestions();
-    }
+        switchTab('list');
+    };
 
-    // --- RENDU ET ACTIONS ROBUSTES ---
     function renderLogs() {
         const container = document.getElementById('logsContainer');
-        container.innerHTML = "";
-
-        if(logs.length === 0) {
-            container.innerHTML = '<div class="card" style="text-align:center;color:gray">Aucune entrée pour le moment</div>';
-            return;
-        }
+        container.innerHTML = logs.length === 0 ? '<p style="text-align:center; color:gray; margin-top:20px;">Aucune donnée enregistrée</p>' : '';
 
         logs.forEach(log => {
             const div = document.createElement('div');
-            div.className = "log-entry";
+            div.className = 'log-entry';
             div.innerHTML = `
                 <div class="log-header">
                     <span class="log-date">${log.date} @ ${log.time}</span>
                     <span class="log-type">${log.type}</span>
                 </div>
-                <div style="margin-bottom:8px">
-                    ${log.foods ? `<div><span class="log-label">ALIMENTS</span>${log.foods}</div>` : ''}
-                    ${log.drinks ? `<div><span class="log-label">BOISSONS</span>${log.drinks}</div>` : ''}
-                    ${log.symptoms.length > 0 ? `
-                        <div style="margin-top:5px">
-                            ${log.symptoms.map(s => `<span class="badge">${s}</span>`).join('')}
-                        </div>
-                    ` : ''}
+                <div>
+                    ${log.foods ? `<div><span class="log-label">REPAS</span>${log.foods}</div>` : ''}
+                    ${log.drinks ? `<div><span class="log-label">BOISSON</span>${log.drinks}</div>` : ''}
+                    ${log.symptoms.length > 0 ? `<div style="margin-top:5px">${log.symptoms.map(s => `<span class="badge">${s}</span>`).join('')}</div>` : ''}
                 </div>
-                <div class="log-actions">
-                    <button class="btn btn-outline btn-sm" onclick="editEntry('${log.id}')">Modifier</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteEntry('${log.id}')">Supprimer</button>
-                </div>
+                <button onclick="deleteEntry(${log.id})" style="background:none; border:none; color:red; font-size:0.7rem; padding:0; margin-top:10px; cursor:pointer;">Supprimer l'entrée</button>
             `;
             container.appendChild(div);
         });
     }
 
-    window.deleteEntry = function(id) {
-        showConfirm("Supprimer cette entrée ?", () => {
+    function deleteEntry(id) {
+        if(confirm("Supprimer cette entrée ?")) {
             logs = logs.filter(l => l.id !== id);
-            localStorage.setItem('healthLogs', JSON.stringify(logs));
+            localStorage.setItem('biolog_logs', JSON.stringify(logs));
             renderLogs();
-            showMessage("Entrée supprimée", "error");
-        });
-    };
-
-    window.editEntry = function(id) {
-        const log = logs.find(l => l.id === id);
-        if(log) {
-            switchTab('add');
-            document.getElementById('editId').value = log.id;
-            document.getElementById('date').value = log.date;
-            document.getElementById('time').value = log.time;
-            document.getElementById('type').value = log.type;
-            document.getElementById('foods').value = log.foods;
-            document.getElementById('drinks').value = log.drinks;
-            
-            document.querySelectorAll('.symptom-checkbox').forEach(cb => {
-                cb.checked = log.symptoms.includes(cb.value);
-            });
-            
-            document.getElementById('submitBtn').style.display = 'none';
-            document.getElementById('editButtons').style.display = 'block';
         }
-    };
+    }
 
-    // --- ANALYSE IA (GEMINI) RE-OPTIMISÉE ---
-    async function analyzeWithAI() {
+    function clearHistory() {
+        if(confirm("Effacer tout votre journal ? Cette action est définitive.")) {
+            logs = [];
+            localStorage.removeItem('biolog_logs');
+            renderLogs();
+        }
+    }
+
+    async function analyzeTendencies() {
         if (logs.length < 3) {
-            showMessage("Ajoutez au moins 3 entrées.", "error");
+            showMessage("Enregistrez au moins 3 entrées pour analyser.", "error");
             return;
         }
 
         const modal = document.getElementById('ai-modal');
         const content = document.getElementById('ai-content');
         modal.style.display = 'block';
-        content.innerHTML = "L'IA analyse vos tendances<span class='loading-dots'></span>";
+        content.innerHTML = "L'analyste examine vos données<span class='loading-dots'></span>";
 
-        // Version ultra simplifiée pour éviter les blocages de sécurité médicaux
-        const dataText = logs.slice(0, 10).map(l => {
-            return `Repas: ${l.foods || 'N/A'}. Resultat: ${l.symptoms.join(', ') || 'OK'}`;
+        // Formatage des données pour l'IA
+        const historyText = logs.slice(0, 15).map(l => {
+            return `Entrée: ${l.foods || 'Rien'}, Symptômes: ${l.symptoms.join(', ') || 'Aucun'}`;
         }).join('\n');
 
-        const promptText = `Agis comme un analyste de données logique. Voici une liste d'observations. Identifie s'il y a une corrélation répétée entre un mot dans 'Repas' et un mot dans 'Resultat'. Réponds en 2 phrases simples sans utiliser de termes médicaux complexes. Ne pas utiliser d'astérisques.
-        
-        Observations :
-        ${dataText}`;
+        const prompt = `Agis comme un analyste de données logique et impartial. 
+        Voici une liste d'observations d'un journal de bord. 
+        Ta mission : Identifier s'il y a des corrélations récurrentes entre des mots-clés de "Entrée" et l'apparition de "Symptômes".
+        Réponds en 3 phrases très simples en français.
+        Ne fais pas de diagnostic. Ne propose pas de traitement.
+        Contenu à analyser :
+        ${historyText}`;
 
-        const fetchAI = async () => {
+        try {
+            // Utilisation du modèle 1.5-flash pour plus de flexibilité
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [{ 
-                        parts: [{ text: promptText }] 
-                    }],
-                    generationConfig: {
-                        temperature: 0.4,
-                        maxOutputTokens: 150
-                    }
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: { temperature: 0.3, maxOutputTokens: 200 }
                 })
             });
-            
-            if (!response.ok) throw new Error("Status " + response.status);
-            
-            const data = await response.json();
-            return data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        };
 
-        try {
-            let text = await fetchAI();
-            if (!text) throw new Error("Vide");
+            if (!response.ok) throw new Error();
+
+            const data = await response.json();
+            let aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "Aucune tendance claire identifiée.";
             
-            // Nettoyage strict pour affichage
-            text = text.replace(/[*#\-_]/g, '').trim();
-            content.innerHTML = text;
-            
-        } catch (error) {
-            console.error(error);
-            // Synthèse manuelle si l'IA refuse encore
-            let fallback = "L'IA est trop prudente pour répondre en direct. Voici vos observations récentes :<br><br>";
+            // Nettoyage final
+            aiResponse = aiResponse.replace(/[*#\-_]/g, '').trim();
+            content.innerHTML = aiResponse;
+
+        } catch (e) {
+            // SOLUTION DE SECOURS (Calcul Statistique Interne)
+            let fallback = "L'IA est momentanément indisponible. Voici une analyse automatique de vos données :\n\n";
             const counts = {};
-            logs.flatMap(l => l.symptoms).forEach(s => counts[s] = (counts[s] || 0) + 1);
+            logs.forEach(l => l.symptoms.forEach(s => counts[s] = (counts[s] || 0) + 1));
+            const top = Object.entries(counts).sort((a,b) => b[1]-a[1])[0];
             
-            const topSymptoms = Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 2);
-            
-            if (topSymptoms.length > 0) {
-                fallback += `Symptômes fréquents : ${topSymptoms.map(s => s[0]).join(' et ')}.<br><br>`;
-                fallback += "Vérifiez vos repas précédents ces symptômes pour trouver un point commun.";
+            if(top) {
+                fallback += `Le symptôme le plus fréquent est "${top[0]}" (vu ${top[1]} fois).\n\nObservez bien vos repas précédant l'apparition de ce symptôme.`;
             } else {
-                fallback += "Aucun symptôme récurrent détecté pour le moment.";
+                fallback += "Aucune tendance répétée n'a pu être calculée statistiquement.";
             }
-            
             content.innerHTML = fallback;
         }
-    }
-
-    // --- UTILITAIRES ---
-    function updateSuggestions() {
-        const container = document.getElementById('food-suggestions');
-        container.innerHTML = "";
-        const allFoods = logs.flatMap(l => l.foods.split(',')).map(f => f.trim()).filter(f => f.length > 2);
-        const uniqueFoods = [...new Set(allFoods)].slice(0, 5);
-        
-        uniqueFoods.forEach(food => {
-            const chip = document.createElement('div');
-            chip.className = 'suggestion-chip';
-            chip.textContent = "+ " + food;
-            chip.onclick = () => {
-                const input = document.getElementById('foods');
-                input.value = input.value ? input.value + ", " + food : food;
-            };
-            container.appendChild(chip);
-        });
     }
 
     function showMessage(text, type = "success") {
@@ -648,46 +492,6 @@
         box.style.background = type === "error" ? "var(--danger)" : "var(--accent)";
         box.style.display = 'block';
         setTimeout(() => box.style.display = 'none', 3000);
-    }
-
-    function exportCSV() {
-        let csv = "Date;Heure;Type;Aliments;Boissons;Symptomes\n";
-        logs.forEach(l => {
-            csv += `${l.date};${l.time};${l.type};"${l.foods}";"${l.drinks}";"${l.symptoms.join(',')}"\n`;
-        });
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "journal_biolog.csv";
-        link.click();
-    }
-
-    // --- GESTION DES CONFIRMATIONS ---
-    let confirmAction = null;
-    
-    function showConfirm(msg, callback) {
-        document.getElementById('confirm-msg').textContent = msg;
-        confirmAction = callback;
-        document.getElementById('confirm-modal').style.display = 'flex';
-    }
-
-    window.closeConfirm = function() {
-        document.getElementById('confirm-modal').style.display = 'none';
-        confirmAction = null;
-    }
-
-    window.executeConfirm = function() {
-        if(confirmAction) confirmAction();
-        closeConfirm();
-    }
-
-    window.clearAll = function() {
-        showConfirm("Voulez-vous vraiment effacer tout votre historique ?", () => {
-            logs = [];
-            localStorage.removeItem('healthLogs');
-            renderLogs();
-            showMessage("Journal vidé", "error");
-        });
     }
 </script>
 
