@@ -530,10 +530,21 @@
         if(!container) return;
         container.innerHTML = "";
         
+        // On récupère tous les aliments cités
         const allFoods = logs.flatMap(l => (l.foods || '').split(',')).map(f => f.trim()).filter(f => f.length > 2);
-        const uniqueFoods = [...new Set(allFoods)].slice(0, 10);
         
-        uniqueFoods.forEach(food => {
+        // On compte les occurrences de chaque aliment
+        const foodCounts = {};
+        allFoods.forEach(f => foodCounts[f] = (foodCounts[f] || 0) + 1);
+        
+        // On ne garde que ceux qui apparaissent au moins 3 fois
+        const frequentFoods = Object.entries(foodCounts)
+            .filter(([name, count]) => count >= 3)
+            .sort((a, b) => b[1] - a[1]) // Du plus fréquent au moins fréquent
+            .map(([name]) => name)
+            .slice(0, 10); // Max 10 suggestions
+        
+        frequentFoods.forEach(food => {
             const chip = document.createElement('div');
             chip.className = 'suggestion-chip';
             chip.textContent = "+ " + food;
